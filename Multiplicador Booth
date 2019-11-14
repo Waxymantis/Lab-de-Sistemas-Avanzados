@@ -1,0 +1,95 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    00:20:33 11/14/2019 
+-- Design Name: 
+-- Module Name:    Multiplicador - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity Multiplicador is
+port(A,B: in std_logic_vector(3 downto 0);
+finalNumber: out std_logic_vector(7 downto 0));
+end Multiplicador;
+
+architecture Behavioral of Multiplicador is
+
+component fullAdderComponent is
+    Port ( x : in  std_logic;
+           y : in  std_logic;
+           cin : in  std_logic;
+           cout : out  std_logic;
+           sum : out  std_logic);
+end component;
+
+signal CAND1,CAND2,CAND3,CAND4,CAND5,CAND6,CAND7,CAND8,CAND9,CAND10:std_logic;
+signal CNAND1,CNAND2,CNAND3,CNAND4,CNAND5,CNAND6:std_logic;
+signal OUT1,OUT2,OUT3,OUT4,OUT5,OUT6,OUT7,OUT8,OUT9,OUT10,OUT11,OUT12,OUT13:std_logic;
+signal C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11,C12,C13:std_logic;
+
+begin
+
+CAND1<=A(0)AND B(0);
+CAND2<=A(1)AND B(0);
+CAND3<=A(2)AND B(0);
+CAND4<=A(0)AND B(1);
+CAND5<=A(1)AND B(1);
+CAND6<=A(2)AND B(1);
+CAND7<=A(0)AND B(2);
+CAND8<=A(1)AND B(2);
+CAND9<=A(2)AND B(2);
+CAND10<=A(3)AND B(3);
+
+CNAND1<=A(3) NAND B(0);
+CNAND2<=A(3) NAND B(1);
+CNAND3<=A(3) NAND B(2);
+CNAND4<=A(0) NAND B(3);
+CNAND5<=A(1) NAND B(3);
+CNAND6<=A(2) NAND B(3);
+
+HA1:fullAdderComponent port map(CAND1,CAND4,'0',C1,OUT1);
+FA2:fullAdderComponent port map(CAND3,CAND5,C1,C2,OUT2);
+FA3:fullAdderComponent port map(CNAND1,CAND6,C2,C3,OUT3);
+FA4:fullAdderComponent port map('1',CNAND2,C3,C4,OUT4);
+HA5:fullAdderComponent port map(OUT2,CAND7,'0',C5,OUT5);
+FA6:fullAdderComponent port map(OUT3,CAND8,C5,C6,OUT6);
+FA7:fullAdderComponent port map(OUT4,CAND9,C6,C7,OUT7);
+FA8:fullAdderComponent port map(C4,CNAND3,C7,C8,OUT8);
+HA9:fullAdderComponent port map(OUT6,CNAND4,'0',C9,OUT9);
+FA10:fullAdderComponent port map(OUT7,CNAND5,C9,C10,OUT10);
+FA11:fullAdderComponent port map(OUT8,CNAND6,C10,C11,OUT11);
+FA12:fullAdderComponent port map(C8,CAND10,C11,C12,OUT12);
+HA13:fullAdderComponent port map('1',C12,'0',C13,OUT13);
+
+finalNumber(0)<=CAND1;
+finalNumber(1)<=OUT1;
+finalNumber(2)<=OUT5;
+finalNumber(3)<=OUT9;
+finalNumber(4)<=OUT10;
+finalNumber(5)<=OUT11;
+finalNumber(6)<=OUT12;
+finalNumber(7)<=OUT13;
+
+end Behavioral;
